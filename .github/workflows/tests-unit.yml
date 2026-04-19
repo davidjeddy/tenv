@@ -1,0 +1,36 @@
+---
+name: "Tests: unit"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: "Running unit tests"
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # ratchet:actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+
+      - name: Run tests with coverage
+        run: go test -v -coverprofile=coverage.out ./...
+
+      - name: Upload coverage reports to Codecov
+        if: github.ref == 'refs/heads/main'
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # ratchet:codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: ./coverage.out
+          token: ${{ secrets.CODECOV_TOKEN }}
