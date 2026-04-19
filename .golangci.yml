@@ -1,0 +1,53 @@
+version: "2"
+run:
+  modules-download-mode: readonly
+linters:
+  default: all
+  disable:
+    - cyclop
+    - err113
+    - exhaustruct
+    - funlen
+    - gochecknoinits
+    - gocognit
+    - lll
+    - mnd
+    - nestif
+    - testpackage
+    - wrapcheck
+    - wsl
+  settings:
+    depguard:
+      rules:
+        main:
+          deny:
+            - pkg: io/ioutil
+              desc: "replaced by io and os packages since Go 1.16: https://tip.golang.org/doc/go1"
+    staticcheck:
+      checks:
+        - -S1024
+        - all
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - .*\.pb\.go
+      - pkg/client
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - .*\.pb\.go
+      - pkg/client
+      - third_party$
+      - builtin$
+      - examples$
