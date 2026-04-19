@@ -1,0 +1,25 @@
+---
+name: "Check: golangci-lint"
+
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - main
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61
